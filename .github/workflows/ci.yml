@@ -24,7 +24,8 @@ jobs:
     - name: Install dependencies
       run: |
           mkdir lambda/package
-          pip install -r requirements.txt -t lambda/package
+          ls -la
+          pip install -r lambda/requirements.txt -t lambda/package
           cp lambda/lambda_function.py lambda/package/
           cd lambda/package/
           zip -r ../lambda_function.zip .
