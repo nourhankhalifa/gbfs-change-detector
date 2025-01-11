@@ -16,6 +16,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      RDS_PASSWORD: ${{ secret.RDS_PASSWORD }}
 
     steps:
       - name: Checkout Code
@@ -34,9 +35,9 @@ jobs:
       - name: Terraform Plan
         run: |
           cd terraform
-          terraform plan -var rds_password=${{ secret.rds_password }} -out=tfplan
+          terraform plan -var rds_password=$RDS_PASSWORD -out=tfplan
 
       - name: Terraform Apply
         run: |
           cd terraform
-          terraform apply -var rds_password=${{ secret.rds_password }} -auto-approve tfplan
+          terraform apply -var rds_password=$RDS_PASSWORD -auto-approve tfplan
