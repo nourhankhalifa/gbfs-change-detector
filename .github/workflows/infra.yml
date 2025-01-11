@@ -34,9 +34,9 @@ jobs:
       - name: Terraform Plan
         run: |
           cd terraform
-          terraform plan -out=tfplan
+          terraform plan -var rds_password=${{ secret.rds_password }} -out=tfplan
 
       - name: Terraform Apply
         run: |
           cd terraform
-          terraform apply -auto-approve tfplan
+          terraform apply -var rds_password=${{ secret.rds_password }} -auto-approve tfplan
