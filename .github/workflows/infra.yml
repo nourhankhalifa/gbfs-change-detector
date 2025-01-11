@@ -40,4 +40,4 @@ jobs:
       - name: Terraform Apply
         run: |
           cd terraform
-          terraform apply -var rds_password=$RDS_PASSWORD -auto-approve tfplan
+          terraform apply -auto-approve tfplan
