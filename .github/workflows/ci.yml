@@ -41,7 +41,7 @@ jobs:
           echo "Lambda function already exists. Updating code..."
           aws lambda update-function-code \
             --function-name GBFSDataFetcher \
-            --zip-file fileb://lambda_function.zip
+            --zip-file fileb://lambda/lambda_function.zip
         else
           echo "Creating new Lambda function..."
           aws lambda create-function \
@@ -49,5 +49,5 @@ jobs:
             --runtime python3.9 \
             --role arn:aws:lambda:us-east-1:164008106637:function:GBFSDataFetcher \
             --handler lambda_function.lambda_handler \
-            --zip-file fileb://lambda_function.zip
+            --zip-file fileb://lambda/lambda_function.zip
         fi
