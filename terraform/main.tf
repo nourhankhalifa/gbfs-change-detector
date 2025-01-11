@@ -129,3 +129,26 @@ resource "null_resource" "get_pk" {
     EOT
   }
 }
+
+# EventBridge Rule
+resource "aws_cloudwatch_event_rule" "every_half_hour" {
+  name        = "gbfs-half-hour-trigger"
+  description = "Trigger the GBFSDataFetcher Lambda every 30 minutes"
+  schedule_expression = "rate(30 minutes)"
+}
+
+# EventBridge Target
+resource "aws_cloudwatch_event_target" "trigger_lambda" {
+  rule      = aws_cloudwatch_event_rule.every_half_hour.name
+  target_id = "gbfs-lambda-trigger"
+  arn       = var.lambda_function_arn
+}
+
+# Lambda Permission to Allow EventBridge Invocation
+resource "aws_lambda_permission" "allow_eventbridge" {
+  statement_id  = "AllowEventBridgeTrigger"
+  action        = "lambda:InvokeFunction"
+  function_name = var.lambda_function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.every_half_hour.arn
+}
