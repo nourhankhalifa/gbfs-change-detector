@@ -69,7 +69,7 @@ resource "tls_private_key" "pk" {
 }
 
 resource "aws_key_pair" "generated_key" {
-  key_name   = "gbfs"
+  key_name   = "gbfs_key"
   public_key = tls_private_key.pk.public_key_openssh
 }
 
@@ -77,7 +77,7 @@ resource "aws_key_pair" "generated_key" {
 resource "aws_instance" "grafana_server" {
   ami           = "ami-05576a079321f21f8"
   instance_type = "t2.micro"
-  key_name      = "gbfs"
+  key_name      = "gbfs_key"
 
   vpc_security_group_ids = [
     aws_security_group.http_tcp_sg.id
@@ -89,6 +89,86 @@ sudo yum install -y https://dl.grafana.com/enterprise/release/grafana-enterprise
 sudo systemctl enable grafana-server.service
 sudo systemctl start grafana-server.service
 EOF
+}
+
+# Upload dashboard JSON and YAML files
+resource "null_resource" "upload_files" {
+  depends_on = [ aws_instance.grafana_server ]
+  triggers = {
+    force_update = "${timestamp()}"  # Forces re-execution
+  }
+  provisioner "file" {
+    source      = "dashboard.json"
+    destination = "/tmp/custom_dashboard.json"
+    connection {
+      type        = "ssh"
+      host        = aws_instance.grafana_server.public_ip
+      user        = "ec2-user"
+      private_key = tls_private_key.pk.private_key_pem
+    }
+  }
+
+  provisioner "file" {
+    source      = "dashboard.yaml"
+    destination = "/tmp/dashboards.yaml"
+
+    connection {
+      type        = "ssh"
+      host        = aws_instance.grafana_server.public_ip
+      user        = "ec2-user"
+      private_key = tls_private_key.pk.private_key_pem
+    }
+  }
+
+  provisioner "file" {
+    content = <<EOT
+  apiVersion: 1
+
+  datasources:
+  - name: MySQL
+    type: mysql
+    url: gbfs-database.cn0gw6o6coo5.us-east-1.rds.amazonaws.com
+    uid: mysql-datasource
+    user: admin
+    isDefault: true
+    editable: true
+    jsonData:
+      database: gbfs-database
+      maxOpenConns: 100
+      maxIdleConns: 100
+      maxIdleConnsAuto: true
+      connMaxLifetime: 14400
+    secureJsonData:
+      password: ${var.rds_password}
+  EOT
+    destination = "/tmp/mysql-datasource.yaml"
+
+    connection {
+      type        = "ssh"
+      host        = aws_instance.grafana_server.public_ip
+      user        = "ec2-user"
+      private_key = tls_private_key.pk.private_key_pem
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo mkdir -p /var/lib/grafana/dashboards",
+      "sudo mkdir -p /etc/grafana/provisioning/datasources/",
+      "sudo cp /tmp/custom_dashboard.json /var/lib/grafana/dashboards/custom_dashboard.json",
+      "sudo mkdir -p /etc/grafana/provisioning/dashboards",
+      "sudo cp /tmp/dashboards.yaml /etc/grafana/provisioning/dashboards/dashboards.yaml",
+      "sudo cp /tmp/mysql-datasource.yaml /etc/grafana/provisioning/datasources/",
+      "sudo systemctl restart grafana-server.service"
+    ]
+
+    connection {
+      type        = "ssh"
+      host        = aws_instance.grafana_server.public_ip
+      user        = "ec2-user"
+      private_key = tls_private_key.pk.private_key_pem
+    }
+  }
 }
 
 # Security Group for EC2 Instance
@@ -110,6 +190,12 @@ resource "aws_security_group" "http_tcp_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["156.222.161.53/32"]
+  }
   egress {
     from_port   = 0
     to_port     = 0
@@ -125,7 +211,7 @@ resource "null_resource" "get_pk" {
   }
   provisioner "local-exec" {
     command = <<EOT
-      terraform output -raw private_key > ./web_server.pem
+      terraform output -raw private_key > ./gbfs_key.pem
     EOT
   }
 }
