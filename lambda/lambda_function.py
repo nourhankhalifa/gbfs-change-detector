@@ -16,12 +16,12 @@ RDS_USER = "admin"
 RDS_PASSWORD = os.getenv('rds_password')
 RDS_DATABASE = "gbfs-database"
 
-# List of providers and their GBFS URLs
-providers = [
-    {"name": "Careem", "url": "https://dubai.publicbikesystem.net/customer/gbfs/v2/gbfs.json"},
-    {"name": "Nextbike", "url": "https://api.nextbike.net/maps/gbfs/v1/nextbike_ae/gbfs.json"},
-    {"name": "CitiBike", "url": "https://gbfs.citibikenyc.com/gbfs/gbfs.json"}
-]
+# Load provider configuration from environment variable
+providers = json.loads(os.getenv("PROVIDERS", "[]"))
+
+if not providers:
+    raise ValueError("No providers configured. Set the PROVIDERS environment variable.")
+
 
 # Relevant feeds to fetch
 relevant_feeds = ["station_status"]
