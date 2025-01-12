@@ -44,6 +44,8 @@ jobs:
           aws lambda update-function-code \
             --function-name GBFSDataFetcher \
             --zip-file fileb://lambda/lambda_function.zip
+          echo "Updating Lambda Config"
+          sleep 20
           aws lambda update-function-configuration \
             --function-name GBFSDataFetcher \
             --environment Variables="{rds_password=$RDS_PASSWORD,providers='$PROVIDERS'}"
