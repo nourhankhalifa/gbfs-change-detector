@@ -1,3 +1,7 @@
+data "http" "my_ip" {
+  url = "https://checkip.amazonaws.com/"
+}
+
 # Create S3 Bucket
 resource "aws_s3_bucket" "gbfs_bucket" {
   bucket = "gbfs-data-storage"
@@ -194,7 +198,7 @@ resource "aws_security_group" "http_tcp_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["156.222.161.53/32"]
+    cidr_blocks = ["${chomp(data.http.my_ip.response_body)}/32"]
   }
   egress {
     from_port   = 0
