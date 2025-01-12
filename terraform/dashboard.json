@@ -18,7 +18,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": 1,
+    "id": 2,
     "links": [],
     "panels": [
       {
@@ -71,8 +71,8 @@
           "overrides": []
         },
         "gridPos": {
-          "h": 8,
-          "w": 12,
+          "h": 14,
+          "w": 24,
           "x": 0,
           "y": 0
         },
@@ -108,7 +108,7 @@
             "editorMode": "code",
             "format": "table",
             "rawQuery": true,
-            "rawSql": "SELECT \n    DATE_FORMAT(timestamp, '%H:%i') AS time_bucket, -- Round timestamp to minute\n    AVG(total_bikes) AS avg_total_bikes,\n    AVG(available_docks) AS avg_available_docks\nFROM gbfs_stats\nWHERE provider = 'CitiBike' AND $__timeFilter(timestamp)\nGROUP BY time_bucket\nORDER BY time_bucket;\n",
+            "rawSql": "SELECT \n    DATE_FORMAT(timestamp, '%H:%i') AS time_bucket,\n    provider,\n    AVG(total_bikes) AS avg_total_bikes,\n    AVG(available_docks) AS avg_available_docks\nFROM gbfs_stats\nWHERE provider IN (${provider:sqlstring}) AND $__timeFilter(timestamp)\nGROUP BY time_bucket, provider\nORDER BY time_bucket, provider;\n",
             "refId": "A",
             "sql": {
               "columns": [
@@ -131,235 +131,36 @@
         ],
         "title": "CitiBike",
         "type": "barchart"
-      },
-      {
-        "datasource": {
-          "type": "mysql",
-          "uid": "mysql-datasource"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "custom": {
-              "axisBorderShow": false,
-              "axisCenteredZero": false,
-              "axisColorMode": "text",
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "fillOpacity": 80,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "lineWidth": 1,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "short"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 12,
-          "y": 0
-        },
-        "id": 1,
-        "options": {
-          "barRadius": 0,
-          "barWidth": 0.97,
-          "fullHighlight": false,
-          "groupWidth": 0.7,
-          "legend": {
-            "calcs": [],
-            "displayMode": "list",
-            "placement": "right",
-            "showLegend": true
-          },
-          "orientation": "auto",
-          "showValue": "never",
-          "stacking": "none",
-          "tooltip": {
-            "mode": "single",
-            "sort": "none"
-          },
-          "xTickLabelRotation": 0,
-          "xTickLabelSpacing": 0
-        },
-        "pluginVersion": "11.1.0",
-        "targets": [
-          {
-            "dataset": "`gbfs-database`",
-            "datasource": {
-              "type": "mysql",
-              "uid": "mysql-datasource"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "SELECT \n    DATE_FORMAT(timestamp, '%H:%i') AS time_bucket, -- Round timestamp to minute\n    AVG(total_bikes) AS avg_total_bikes,\n    AVG(available_docks) AS avg_available_docks\nFROM gbfs_stats\nWHERE provider = 'Careem' AND $__timeFilter(timestamp)\nGROUP BY time_bucket\nORDER BY time_bucket;\n",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
-          }
-        ],
-        "title": "Careem",
-        "type": "barchart"
-      },
-      {
-        "datasource": {
-          "type": "mysql",
-          "uid": "mysql-datasource"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "custom": {
-              "axisBorderShow": false,
-              "axisCenteredZero": false,
-              "axisColorMode": "text",
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "fillOpacity": 80,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "lineWidth": 1,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "short"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 0,
-          "y": 8
-        },
-        "id": 2,
-        "options": {
-          "barRadius": 0,
-          "barWidth": 0.97,
-          "fullHighlight": false,
-          "groupWidth": 0.7,
-          "legend": {
-            "calcs": [],
-            "displayMode": "list",
-            "placement": "right",
-            "showLegend": true
-          },
-          "orientation": "auto",
-          "showValue": "never",
-          "stacking": "none",
-          "tooltip": {
-            "mode": "single",
-            "sort": "none"
-          },
-          "xTickLabelRotation": 0,
-          "xTickLabelSpacing": 0
-        },
-        "targets": [
-          {
-            "dataset": "`gbfs-database`",
-            "datasource": {
-              "type": "mysql",
-              "uid": "mysql-datasource"
-            },
-            "editorMode": "code",
-            "format": "table",
-            "rawQuery": true,
-            "rawSql": "SELECT \n    DATE_FORMAT(timestamp, '%H:%i') AS time_bucket, -- Round timestamp to minute\n    AVG(total_bikes) AS avg_total_bikes,\n    AVG(available_docks) AS avg_available_docks\nFROM gbfs_stats\nWHERE provider = 'Nextbike' AND $__timeFilter(timestamp)\nGROUP BY time_bucket\nORDER BY time_bucket;\n",
-            "refId": "A",
-            "sql": {
-              "columns": [
-                {
-                  "parameters": [],
-                  "type": "function"
-                }
-              ],
-              "groupBy": [
-                {
-                  "property": {
-                    "type": "string"
-                  },
-                  "type": "groupBy"
-                }
-              ],
-              "limit": 50
-            }
-          }
-        ],
-        "title": "Nextbike",
-        "type": "barchart"
       }
     ],
     "schemaVersion": 39,
     "tags": [],
     "templating": {
-      "list": []
+      "list": [
+        {
+          "current": {
+            "selected": true,
+            "text": "CitiBike",
+            "value": "CitiBike"
+          },
+          "datasource": {
+            "type": "mysql",
+            "uid": "mysql-datasource"
+          },
+          "definition": "SELECT DISTINCT provider FROM gbfs_stats;",
+          "hide": 0,
+          "includeAll": false,
+          "multi": false,
+          "name": "provider",
+          "options": [],
+          "query": "SELECT DISTINCT provider FROM gbfs_stats;",
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        }
+      ]
     },
     "time": {
       "from": "now-3h",
@@ -367,8 +168,8 @@
     },
     "timepicker": {},
     "timezone": "browser",
-    "title": "GBFS Dashboard",
-    "uid": "ce9oeod12l7nkb",
-    "version": 4,
+    "title": "GBFS Dashboard Copy",
+    "uid": "ce9t2ocnalngga",
+    "version": 2,
     "weekStart": ""
   }
