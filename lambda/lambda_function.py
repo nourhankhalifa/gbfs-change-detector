@@ -17,7 +17,7 @@ RDS_PASSWORD = os.getenv('rds_password')
 RDS_DATABASE = "gbfs-database"
 
 # Load provider configuration from environment variable
-providers = json.loads(os.getenv("PROVIDERS", "[]"))
+providers = json.loads(os.getenv("providers", "[]"))
 
 if not providers:
     raise ValueError("No providers configured. Set the PROVIDERS environment variable.")
