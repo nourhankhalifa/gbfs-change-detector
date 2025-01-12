@@ -37,7 +37,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: ${{ secrets.AWS_REGION }}
         RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
-        PROVIDERS: ${{ var.PROVIDERS }}
+        PROVIDERS: ${{ vars.PROVIDERS }}
       run: |
         if aws lambda get-function --function-name GBFSDataFetcher > /dev/null 2>&1; then
           echo "Lambda function already exists. Updating code..."
