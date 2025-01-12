@@ -5,11 +5,7 @@ import pymysql  # For MySQL, or use psycopg2 for PostgreSQL
 from datetime import datetime
 import os
 
-# AWS Clients
-s3_client = boto3.client("s3")
 
-# Configuration
-S3_BUCKET_NAME = "gbfs-data-storage"
 RDS_HOST = "gbfs-database.cn0gw6o6coo5.us-east-1.rds.amazonaws.com"
 RDS_PORT = 3306  # Default port for MySQL
 RDS_USER = "admin"
@@ -73,16 +69,6 @@ def extract_stats(feed_name, feed_data):
         return {"total_bikes": total_bikes, "available_docks": available_docks}
     return {}
 
-# Save raw JSON to S3
-def save_to_s3(bucket_name, key, data):
-    s3_client.put_object(
-        Bucket=bucket_name,
-        Key=key,
-        Body=json.dumps(data),
-        ContentType="application/json"
-    )
-    print(f"Saved {key} to S3 bucket {bucket_name}")
-
 # Save stats to RDS
 def save_to_rds(connection, provider_name, feed_name, stats):
     try:
@@ -125,10 +111,6 @@ def lambda_handler(event, context):
             # Fetch GBFS JSON
             result = fetch_gbfs(provider)
             if result:
-                # Save raw GBFS data to S3
-                gbfs_key = f"{provider['name']}/gbfs.json"
-                save_to_s3(S3_BUCKET_NAME, gbfs_key, result)
-
                 # Extract relevant feeds
                 feeds = result['data']['data']['en']['feeds']
                 for feed_name in relevant_feeds:
@@ -137,10 +119,6 @@ def lambda_handler(event, context):
                         # Fetch feed data
                         feed_data = fetch_feed_data(feed_url)
                         if feed_data:
-                            # Save raw feed data to S3
-                            feed_key = f"{provider['name']}/{feed_name}.json"
-                            save_to_s3(S3_BUCKET_NAME, feed_key, feed_data)
-
                             # Extract and save stats
                             stats = extract_stats(feed_name, feed_data)
                             if stats:
