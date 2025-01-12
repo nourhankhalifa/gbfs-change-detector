@@ -129,7 +129,7 @@
             }
           }
         ],
-        "title": "CitiBike",
+        "title": "GBFS-Data",
         "type": "barchart"
       }
     ],
@@ -140,8 +140,8 @@
         {
           "current": {
             "selected": true,
-            "text": "CitiBike",
-            "value": "CitiBike"
+            "text": "GBFS-Data",
+            "value": "GBFS-Data"
           },
           "datasource": {
             "type": "mysql",
@@ -168,8 +168,8 @@
     },
     "timepicker": {},
     "timezone": "browser",
-    "title": "GBFS Dashboard Copy",
-    "uid": "ce9t2ocnalngga",
+    "title": "GBFS Dashboard",
+    "uid": "ce9oeod12l7nkb",
     "version": 2,
     "weekStart": ""
   }

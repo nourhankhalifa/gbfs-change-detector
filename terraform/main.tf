@@ -204,17 +204,17 @@ resource "aws_security_group" "http_tcp_sg" {
   }
 }
 
-resource "null_resource" "get_pk" {
-  depends_on = [ aws_instance.grafana_server ]
-  triggers = {
-    always_run = timestamp()
-  }
-  provisioner "local-exec" {
-    command = <<EOT
-      terraform output -raw private_key > ./gbfs_key.pem
-    EOT
-  }
-}
+# resource "null_resource" "get_pk" {
+#   depends_on = [ aws_instance.grafana_server ]
+#   triggers = {
+#     always_run = timestamp()
+#   }
+#   provisioner "local-exec" {
+#     command = <<EOT
+#       terraform output -raw private_key > ./gbfs_key.pem
+#     EOT
+#   }
+# }
 
 # EventBridge Rule
 resource "aws_cloudwatch_event_rule" "every_half_hour" {
