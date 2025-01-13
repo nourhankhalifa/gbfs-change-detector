@@ -122,13 +122,13 @@ By managing infrastructure as code, this workflow ensures reproducibility, secur
 
 If I had more time to work on this project, here are the improvements and enhancements I would focus on:
 
-1. **Enhanced Dashboards**:
-   - I would create more detailed and insightful Grafana dashboards to better visualize the data, including trends, comparative analyses, and additional metrics such as bike utilization rates and station-specific performance.
-   - The dashboards could also include user-defined thresholds and real-time alerts to monitor critical conditions such as low bike availability or system outages.
 
-2. **Additional Data Visualizations**:
+1. **Additional Data Visualizations**:
    - Explore and visualize more datasets, such as geospatial information to map bike availability by location or historical trends to forecast future demand.
    - Introduce dashboards for system-level metrics like API response times and error rates, ensuring the system's performance is also monitored.
+
+2. **EventBridge Frequency Enhancements**:
+   - Enhance the data collection frequency by configuring Amazon EventBridge to trigger the Lambda function at shorter intervals, such as every minute. This would enable near real-time data updates, allowing for more accurate and responsive dashboards and insights. While the current 30-minute interval is sufficient for general monitoring, more frequent data retrieval would be especially beneficial for operational scenarios where timely decision-making is critical. However, increasing the frequency would require careful consideration of cost implications, as both AWS Lambda and data storage costs would scale with the frequency of execution.
 
 3. **Customizable and Team-Oriented Features**:
    - Tailor the dashboards and metrics based on specific team requirements or stakeholder needs. For example, providing operational teams with data for quick decision-making, or enabling data exports for business analysis.
