@@ -35,6 +35,8 @@ The **GBFS Change Detector** is built using an AWS Lambda function written in Py
 
 4. **Output**:
    - The processed data in RDS is used for visualization via Grafana, enabling real-time monitoring and trend analysis.
+   <img width="1069" alt="Screenshot 2025-01-13 at 6 58 17 PM" src="https://github.com/user-attachments/assets/fe7cb8d9-79b7-4241-a7bc-5e1c57815264" />
+
 
 ---
 
