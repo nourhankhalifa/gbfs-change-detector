@@ -56,7 +56,7 @@ The infrastructure for the GBFS Change Detector project is fully automated using
 
 3. **Grafana on EC2**:
    - An EC2 instance is configured to host Grafana for data visualization. The instance runs a free-tier `t2.micro` instance with Grafana installed via user data script.
-   - Grafana is automatically configured with dashboards and a MySQL datasource to query the RDS database for statistics.
+   - Grafana is automatically configured with dashboards and a MySQL datasource to query the RDS database for statistics using templates to avoid any manual work done from the GUI.
    - Security groups allow HTTP (port 80) and Grafana’s default port (3000) for user access, as well as SSH (port 22) for administrative access restricted to the current user’s IP.
    - Current Grafana server is accessible at http://54.173.195.165:3000/
    <img width="1440" alt="Screenshot 2025-01-13 at 2 53 27 AM" src="https://github.com/user-attachments/assets/eb84b9a6-889f-4f83-b8d6-339c7f580d32" />
@@ -117,6 +117,26 @@ This workflow is triggered whenever changes are pushed to the `main` branch that
 
 By managing infrastructure as code, this workflow ensures reproducibility, security, and consistency in the deployment environment.
 
+---
+### Things You Would Change If You Had More Time
+
+If I had more time to work on this project, here are the improvements and enhancements I would focus on:
+
+1. **Enhanced Dashboards**:
+   - I would create more detailed and insightful Grafana dashboards to better visualize the data, including trends, comparative analyses, and additional metrics such as bike utilization rates and station-specific performance.
+   - The dashboards could also include user-defined thresholds and real-time alerts to monitor critical conditions such as low bike availability or system outages.
+
+2. **Additional Data Visualizations**:
+   - Explore and visualize more datasets, such as geospatial information to map bike availability by location or historical trends to forecast future demand.
+   - Introduce dashboards for system-level metrics like API response times and error rates, ensuring the system's performance is also monitored.
+
+3. **Customizable and Team-Oriented Features**:
+   - Tailor the dashboards and metrics based on specific team requirements or stakeholder needs. For example, providing operational teams with data for quick decision-making, or enabling data exports for business analysis.
+
+
+4. **Alerting and Notifications**:
+   - Alerting functionality has not been implemented in this project due to the lack of access to a test environment on a communication platform like Microsoft Teams, Slack, or Google Chat, which typically require premium plans or specific integrations for testing. However, implementing alerting would involve setting up contact points on the preferred platform and configuring alert rules in Grafana. Steps include integrating Grafana with the communication platform using webhooks or plugins, defining thresholds for critical metrics (e.g., low bike availability or database errors), and creating alert rules to notify the appropriate channels in real time. These notifications would help teams quickly respond to system issues or abnormal data patterns, enhancing operational efficiency and reliability.
+   - Templates for contact points and alert rules can also be added as code to be mounted to the grafana server automatically.
 
 ---
 
