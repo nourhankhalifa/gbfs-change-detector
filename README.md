@@ -213,3 +213,39 @@ To manually execute the scripts without using the pipelines, please follow these
         {"name": "Nextbike", "url": "https://api.nextbike.net/maps/gbfs/v1/nextbike_ae/gbfs.json"},
         {"name": "CitiBike", "url": "https://gbfs.citibikenyc.com/gbfs/gbfs.json"}]'}
    ```
+
+
+
+
+1. **Fork the Repository**:
+   - Fork the repository to your GitHub account:
+     ```bash
+     git clone https://github.com/your-username/gbfs-change-detector.git
+     cd gbfs-change-detector
+     ```
+
+2. **Update Secrets in GitHub**:
+   - Navigate to your repository's **Settings** > **Secrets and variables** > **Actions**.
+   - Add the following secrets:
+     - `AWS_ACCESS_KEY_ID`: Your AWS access key.
+     - `AWS_SECRET_ACCESS_KEY`: Your AWS secret access key.
+     - `AWS_REGION`: Your AWS region.
+     - `RDS_PASSWORD`: Your RDS database password.
+
+   - Add the following environment variable:
+     - `PROVIDERS`: A JSON string of the provider list. For example:
+       ```json
+       [
+           {"name": "Careem", "url": "https://dubai.publicbikesystem.net/customer/gbfs/v2/gbfs.json"},
+           {"name": "Nextbike", "url": "https://api.nextbike.net/maps/gbfs/v1/nextbike_ae/gbfs.json"},
+           {"name": "CitiBike", "url": "https://gbfs.citibikenyc.com/gbfs/gbfs.json"}
+       ]
+       ```
+3. **Run Infrastructure Pipeline**:
+    - Push your changes to the main branch or trigger the Terraform pipeline manually to provision the required AWS infrastructure, including the RDS instance, EC2 instance, Grafana dashboard and datasource, and other resources.
+
+4. **Run CI Pipeline**:
+    - Push your changes to the main branch or trigger the CI pipeline manually. This will package and deploy the Lambda function, updating its configuration with the required secrets and environment variables.
+
+
+By following these steps, the infrastructure and Lambda function will be automatically deployed using the GitHub workflows, ensuring a seamless and efficient setup process.
