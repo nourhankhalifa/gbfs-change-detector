@@ -1,6 +1,7 @@
 ### Architecture Overview
 
 The **GBFS Change Detector** is built using an AWS Lambda function written in Python. It is designed to fetch and process real-time data from General Bikeshare Feed Specification (GBFS) endpoints of bike-sharing providers. The architecture leverages AWS services like RDS for structured data persistence, providing a scalable and serverless solution, Grafana for monitoring, GitHub workflows for automationg the infrastructure provisioning and Lambda function deployment.
+<img width="1239" alt="Screenshot 2025-01-13 at 2 48 57 AM" src="https://github.com/user-attachments/assets/c402e71d-ba35-46e7-a03e-431ab90ae7af" />
 
 ---
 
