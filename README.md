@@ -58,7 +58,8 @@ The infrastructure for the GBFS Change Detector project is fully automated using
    - An EC2 instance is configured to host Grafana for data visualization. The instance runs a free-tier `t2.micro` instance with Grafana installed via user data script.
    - Grafana is automatically configured with dashboards and a MySQL datasource to query the RDS database for statistics.
    - Security groups allow HTTP (port 80) and Grafana’s default port (3000) for user access, as well as SSH (port 22) for administrative access restricted to the current user’s IP.
-
+   - Current Grafana server is accessible at http://54.173.195.165:3000/
+   <img width="1440" alt="Screenshot 2025-01-13 at 2 53 27 AM" src="https://github.com/user-attachments/assets/eb84b9a6-889f-4f83-b8d6-339c7f580d32" />
 4. **EventBridge**:
    - A CloudWatch EventBridge rule is set up to trigger the Lambda function every 30 minutes. This ensures periodic data fetching and processing without manual intervention.
 
