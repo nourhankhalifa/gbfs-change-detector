@@ -2,10 +2,10 @@ data "http" "my_ip" {
   url = "https://checkip.amazonaws.com/"
 }
 
-# Create S3 Bucket
-resource "aws_s3_bucket" "gbfs_bucket" {
-  bucket = "gbfs-data-storage"
-}
+# # Create S3 Bucket
+# resource "aws_s3_bucket" "gbfs_bucket" {
+#   bucket = "gbfs-data-storage"
+# }
 
 resource "aws_iam_role" "lambda_exec" {
   name = "GBFSDataFetcher-role-36uw9y89"
@@ -37,6 +37,8 @@ resource "aws_db_instance" "mysql" {
   username             = "admin"
   password             = var.rds_password
   parameter_group_name = "default.mysql8.0"
+  identifier           = "gbfs"
+  db_name              = "gbfs" 
   storage_encrypted    = true
   publicly_accessible  = true
   skip_final_snapshot  = true
@@ -131,13 +133,13 @@ resource "null_resource" "upload_files" {
   datasources:
   - name: MySQL
     type: mysql
-    url: gbfs-database.cn0gw6o6coo5.us-east-1.rds.amazonaws.com
+    url: ${aws_db_instance.mysql.address}
     uid: mysql-datasource
     user: admin
     isDefault: true
     editable: true
     jsonData:
-      database: gbfs-database
+      database: ${aws_db_instance.mysql.db_name}
       maxOpenConns: 100
       maxIdleConns: 100
       maxIdleConnsAuto: true
@@ -208,17 +210,17 @@ resource "aws_security_group" "http_tcp_sg" {
   }
 }
 
-# resource "null_resource" "get_pk" {
-#   depends_on = [ aws_instance.grafana_server ]
-#   triggers = {
-#     always_run = timestamp()
-#   }
-#   provisioner "local-exec" {
-#     command = <<EOT
-#       terraform output -raw private_key > ./gbfs_key.pem
-#     EOT
-#   }
-# }
+resource "null_resource" "get_pk" {
+  depends_on = [ aws_instance.grafana_server ]
+  triggers = {
+    always_run = timestamp()
+  }
+  provisioner "local-exec" {
+    command = <<EOT
+      terraform output -raw private_key > ./gbfs_key.pem
+    EOT
+  }
+}
 
 # EventBridge Rule
 resource "aws_cloudwatch_event_rule" "every_half_hour" {

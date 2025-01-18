@@ -6,11 +6,11 @@ from datetime import datetime
 import os
 
 
-RDS_HOST = "gbfs-database.cn0gw6o6coo5.us-east-1.rds.amazonaws.com"
+RDS_HOST = os.getenv('rds_host')
 RDS_PORT = 3306  # Default port for MySQL
 RDS_USER = "admin"
 RDS_PASSWORD = os.getenv('rds_password')
-RDS_DATABASE = "gbfs-database"
+RDS_DATABASE = os.getenv('rds_db')
 
 # Load provider configuration from environment variable
 providers = json.loads(os.getenv("providers", "[]"))

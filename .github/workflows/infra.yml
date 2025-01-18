@@ -3,7 +3,7 @@ name: Terraform
 on:
   push:
     branches:
-      - main
+      - demo
     paths:
       - terraform/**
       - .github/workflows/infra.yml
