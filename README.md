@@ -218,14 +218,14 @@ To manually execute the scripts without using the pipelines, please follow these
             --zip-file fileb://lambda/lambda_function.zip \
             --environment Variables="{rds_password=$RDS_PASSWORD,providers='$PROVIDERS',rds_host=$RDS_HOST,rds_db=$RDS_DB}"
             ```
-3. **Run CI Pipeline**:
+5. **Run CI Pipeline**:
     - Push your changes to the main branch or trigger the CI pipeline manually. This will package and deploy the Lambda function, updating its configuration with the required secrets and environment variables.
     - From the AWS console, copy the created lambda function ARN, and update the lambda_function_arn in the terraform/variables.tf (Only for the first run).
-3. **Run Infrastructure Pipeline**:
+6. **Run Infrastructure Pipeline**:
     - Push your changes to the main branch or trigger the Terraform pipeline manually to provision the required AWS infrastructure, including the RDS instance, EC2 instance, Grafana dashboard and datasource, and other resources.
     - From the AWS console, copy the created RDS host, and update the GitHub environment variable for the RDS_HOST with the new value. (Only for the first run).
 
-4. **Run CI Pipeline**:
+7. **Run CI Pipeline**:
     - Rerun the CI pipeline to update the lambda function environment variables with the new RDS_HOST. (Only for the first run).
 
 
