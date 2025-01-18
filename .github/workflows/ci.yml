@@ -3,7 +3,7 @@ name: CD Workflow
 on:
   push:
     branches:
-      - main
+      - demo
     paths:
       - lambda/**
       - .github/workflows/ci.yml
@@ -54,7 +54,7 @@ jobs:
           aws lambda create-function \
             --function-name GBFSDataFetcher \
             --runtime python3.9 \
-            --role arn:aws:lambda:us-east-1:164008106637:function:GBFSDataFetcher \
+            --role arn:aws:iam::164008106637:role/GBFSDataFetcher-role \
             --handler lambda_function.lambda_handler \
             --zip-file fileb://lambda/lambda_function.zip \
             --environment Variables="{rds_password=$RDS_PASSWORD,providers='$PROVIDERS'}"

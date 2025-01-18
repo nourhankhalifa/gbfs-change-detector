@@ -15,7 +15,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "gbfs-data-storage"
+    bucket         = "gbfs-tfstate"
     key            = "global/s3/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
