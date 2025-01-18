@@ -37,7 +37,8 @@ resource "aws_db_instance" "mysql" {
   username             = "admin"
   password             = var.rds_password
   parameter_group_name = "default.mysql8.0"
-  db_name              = "gbfs-database"
+  identifier           = "gbfs"
+  db_name              = "gbfs" 
   storage_encrypted    = true
   publicly_accessible  = true
   skip_final_snapshot  = true
@@ -132,13 +133,13 @@ resource "null_resource" "upload_files" {
   datasources:
   - name: MySQL
     type: mysql
-    url: gbfs-database.cn0gw6o6coo5.us-east-1.rds.amazonaws.com
+    url: ${aws_db_instance.mysql.address}
     uid: mysql-datasource
     user: admin
     isDefault: true
     editable: true
     jsonData:
-      database: gbfs-database
+      database: ${aws_db_instance.mysql.db_name}
       maxOpenConns: 100
       maxIdleConns: 100
       maxIdleConnsAuto: true

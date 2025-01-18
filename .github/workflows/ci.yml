@@ -38,6 +38,8 @@ jobs:
         AWS_REGION: ${{ secrets.AWS_REGION }}
         RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
         PROVIDERS: ${{ vars.PROVIDERS }}
+        RDS_HOST: ${{ vars.RDS_HOST }}
+        RDS_DB: ${{ vars.RDS_DB }}
       run: |
         if aws lambda get-function --function-name GBFSDataFetcher > /dev/null 2>&1; then
           echo "Lambda function already exists. Updating code..."
@@ -48,7 +50,7 @@ jobs:
           sleep 20
           aws lambda update-function-configuration \
             --function-name GBFSDataFetcher \
-            --environment Variables="{rds_password=$RDS_PASSWORD,providers='$PROVIDERS'}"
+            --environment Variables="{rds_password=$RDS_PASSWORD,providers='$PROVIDERS',rds_host=$RDS_HOST,rds_db=$RDS_DB}"
         else
           echo "Creating new Lambda function..."
           aws lambda create-function \
@@ -57,5 +59,5 @@ jobs:
             --role arn:aws:iam::164008106637:role/GBFSDataFetcher-role \
             --handler lambda_function.lambda_handler \
             --zip-file fileb://lambda/lambda_function.zip \
-            --environment Variables="{rds_password=$RDS_PASSWORD,providers='$PROVIDERS'}"
+            --environment Variables="{rds_password=$RDS_PASSWORD,providers='$PROVIDERS',rds_host=$RDS_HOST,rds_db=$RDS_DB}"
         fi
