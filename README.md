@@ -193,6 +193,8 @@ To manually execute the scripts without using the pipelines, please follow these
 
 
    - Add the following environment variable:
+     - `RDS_DB`: RDS database name, same as configured in the terraform script.
+     - `RDS_HOST`: Known after applying the terraform script.
      - `PROVIDERS`: A JSON string of the provider list. For example:
        ```json
        [
@@ -202,11 +204,29 @@ To manually execute the scripts without using the pipelines, please follow these
        ]
        ```
        <img width="1014" alt="Screenshot 2025-01-13 at 7 21 11 PM" src="https://github.com/user-attachments/assets/3fb12ab1-561e-44b2-b7ac-fb418607b78d" />
+3. **Create S3 Bucket for tfstate**
+    - Manually create S3 bucket with versioning enabled, to be used for the terraform state.
+    - Update the terraform/provider.tf file with the name of the bucket in the backend block.
+4. **Create Lambda IAM Role**
+    - Create an IAM role for the lambda function, with AWS Service as the trusted entity type and Lambda as the use case, then add AWSLambda_FullAccess as permission policy.
+    - Copy the ARN of the role and update the .github/workflows/ci.yml pipeline (Only for the first run).
+        ```aws lambda create-function \
+            --function-name GBFSDataFetcher \
+            --runtime python3.9 \
+            --role YOUR_ARN \
+            --handler lambda_function.lambda_handler \
+            --zip-file fileb://lambda/lambda_function.zip \
+            --environment Variables="{rds_password=$RDS_PASSWORD,providers='$PROVIDERS',rds_host=$RDS_HOST,rds_db=$RDS_DB}"
+            ```
+3. **Run CI Pipeline**:
+    - Push your changes to the main branch or trigger the CI pipeline manually. This will package and deploy the Lambda function, updating its configuration with the required secrets and environment variables.
+    - From the AWS console, copy the created lambda function ARN, and update the lambda_function_arn in the terraform/variables.tf (Only for the first run).
 3. **Run Infrastructure Pipeline**:
     - Push your changes to the main branch or trigger the Terraform pipeline manually to provision the required AWS infrastructure, including the RDS instance, EC2 instance, Grafana dashboard and datasource, and other resources.
+    - From the AWS console, copy the created RDS host, and update the GitHub environment variable for the RDS_HOST with the new value. (Only for the first run).
 
 4. **Run CI Pipeline**:
-    - Push your changes to the main branch or trigger the CI pipeline manually. This will package and deploy the Lambda function, updating its configuration with the required secrets and environment variables.
+    - Rerun the CI pipeline to update the lambda function environment variables with the new RDS_HOST. (Only for the first run).
 
 
 By following these steps, the infrastructure and Lambda function will be automatically deployed using the GitHub workflows, ensuring a seamless and efficient setup process.
