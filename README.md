@@ -175,48 +175,6 @@ To manually execute the scripts without using the pipelines, please follow these
 
 ### Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/nourhankhalifa/gbfs-change-detector.git
-   cd gbfs-change-detector
-   ```
-
-2. Set up Python environment:
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
-   ```
-
-3. Provision infrastructure using Terraform:
-   ```bash
-   cd terraform
-   terraform init
-   terraform apply -var='rds_password=your_rds_password'
-   ```
-
-4. Deploy the Lambda function:
-   ```bash
-   mkdir lambda/package
-   pip install -r lambda/requirements.txt -t lambda/package
-   cp lambda/lambda_function.py lambda/package/
-   cd lambda/package/
-   zip -r ../lambda_function.zip .
-   aws lambda create-function \
-       --function-name GBFSDataFetcher \
-       --runtime python3.9 \
-       --role <Your Lambda Role ARN> \
-       --handler lambda_function.lambda_handler \
-       --zip-file fileb://lambda_function.zip \
-       --environment Variables={rds_password=your_rds_password,providers='your provider list i.e: [
-        {"name": "Careem", "url": "https://dubai.publicbikesystem.net/customer/gbfs/v2/gbfs.json"},
-        {"name": "Nextbike", "url": "https://api.nextbike.net/maps/gbfs/v1/nextbike_ae/gbfs.json"},
-        {"name": "CitiBike", "url": "https://gbfs.citibikenyc.com/gbfs/gbfs.json"}]'}
-   ```
-
-
-
-
 1. **Fork the Repository**:
    - Fork the repository to your GitHub account:
      ```bash
@@ -231,6 +189,8 @@ To manually execute the scripts without using the pipelines, please follow these
      - `AWS_SECRET_ACCESS_KEY`: Your AWS secret access key.
      - `AWS_REGION`: Your AWS region.
      - `RDS_PASSWORD`: Your RDS database password.
+      <img width="1179" alt="Screenshot 2025-01-13 at 7 20 44 PM" src="https://github.com/user-attachments/assets/de0d5847-28c7-4436-bed8-f7fdfdf8dc0b" />
+
 
    - Add the following environment variable:
      - `PROVIDERS`: A JSON string of the provider list. For example:
@@ -241,6 +201,7 @@ To manually execute the scripts without using the pipelines, please follow these
            {"name": "CitiBike", "url": "https://gbfs.citibikenyc.com/gbfs/gbfs.json"}
        ]
        ```
+       <img width="1014" alt="Screenshot 2025-01-13 at 7 21 11 PM" src="https://github.com/user-attachments/assets/3fb12ab1-561e-44b2-b7ac-fb418607b78d" />
 3. **Run Infrastructure Pipeline**:
     - Push your changes to the main branch or trigger the Terraform pipeline manually to provision the required AWS infrastructure, including the RDS instance, EC2 instance, Grafana dashboard and datasource, and other resources.
 
